@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="dao.GuestMapper">
+ <resultMap id="guestDto" type="com.java.guest.dto.GuestDto">		
+		<result property="num" column="num" />
+		<result property="name" column="name" />
+		<result property="password" column="password" />
+		<result property="message" column="message" />
+		<result property="writeDate" column="write_date" />				
+ </resultMap>
+ <insert id="guestIns" parameterType="com.java.guest.dto.GuestDto">
+ 	insert into guest values(guest_num_seq.nextval, #{name},#{password},#{message},#{writeDate})
+ </insert>
+ 
+ <select id="guestRead" parameterType="java.util.HashMap" resultMap="guestDto">
+ 	<![CDATA[
+ 	SELECT * FROM (SELECT ROWNUM AS rnum, A.* FROM (SELECT * FROM guest ORDER BY num desc) A) B WHERE B.rnum >= #{startRow} and B.rnum <= #{endRow}
+ 	]]>
+ </select>
+ 
+ <select id="guestTotal" resultType="java.lang.Integer">
+ 	select count(*) from guest
+ </select>
+ 
+ <delete id="guestDelete" parameterType="java.lang.Integer">
+ 	delete from guest where num = #{num}
+ </delete>
+ 
+ <select id="guestSelect" parameterType="java.lang.Integer" resultType="com.java.guest.dto.GuestDto">
+ 	SELECT * FROM guest WHERE num = #{num}
+ </select>
+ 
+ <update id="guestUpdate" parameterType="com.java.guest.dto.GuestDto">
+ 	UPDATE guest SET password=#{password}, message=#{message} WHERE num=#{num}
+ </update>
+ 
+</mapper>
